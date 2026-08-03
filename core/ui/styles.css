@@ -1,0 +1,60 @@
+.avz-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-family: system-ui, sans-serif;
+}
+
+.avz-algorithm-nav {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+.avz-nav-link {
+  text-decoration: none;
+  color: #333;
+}
+
+.avz-nav-link--active {
+  font-weight: 700;
+  color: #111;
+}
+
+.avz-step-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.avz-step-counter {
+  font-variant-numeric: tabular-nums;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.avz-step-description {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.avz-playback-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.avz-btn {
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+.avz-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.avz-scrubber {
+  flex: 1;
+}
