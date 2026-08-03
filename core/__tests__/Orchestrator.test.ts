@@ -81,8 +81,10 @@ describe('Orchestrator', () => {
 
   it('regenerates steps and resets to index 0 when input changes via the input editor', () => {
     let capturedOnChange: ((input: number) => void) | undefined;
+    let capturedCanvas: HTMLCanvasElement | undefined;
     const { module, render } = makeModule({
-      createInputEditor: (_container, onChange) => {
+      createInputEditor: (_container, canvas, onChange) => {
+        capturedCanvas = canvas;
         capturedOnChange = onChange;
       },
     });
@@ -93,6 +95,7 @@ describe('Orchestrator', () => {
     expect(render).toHaveBeenLastCalledWith({ state: 1, description: 's1' });
 
     orchestrator.mountInputEditor(document.createElement('div'));
+    expect(capturedCanvas).toBe(canvas);
     capturedOnChange?.(5);
 
     expect(render).toHaveBeenLastCalledWith({ state: 0, description: 's0' });

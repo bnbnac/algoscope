@@ -12,7 +12,14 @@
         kdtree 등 실제 알고리즘과 무관한 더미 카운터입니다. core의 재생/오케스트레이션/UI 셸
         동작 확인용이며, 실제 알고리즘 모듈이 추가되면 이 페이지는 삭제됩니다.
       </p>
-      <canvas id="demo-canvas" width="400" height="200" style="border: 1px solid #ccc;"></canvas>
+      <div style="max-width: 400px; width: 100%; aspect-ratio: 2 / 1">
+        <canvas
+          id="demo-canvas"
+          width="400"
+          height="200"
+          style="width: 100%; height: 100%; display: block; border: 1px solid #ccc"
+        ></canvas>
+      </div>
       <div id="demo-input-editor" style="margin: 1rem 0;"></div>
       <div id="demo-shell"></div>
     </main>

@@ -17,6 +17,7 @@ export interface AlgorithmModule<TInput, TState> {
   createRenderer(canvas: HTMLCanvasElement): Renderer<TState>;
   createInputEditor?(
     container: HTMLElement,
+    canvas: HTMLCanvasElement,
     onChange: (input: TInput) => void
   ): void;
 }

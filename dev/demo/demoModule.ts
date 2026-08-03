@@ -53,7 +53,7 @@ export const demoModule: AlgorithmModule<DemoInput, DemoState> = {
   createRenderer(canvas) {
     return new DemoRenderer(canvas);
   },
-  createInputEditor(container, onChange) {
+  createInputEditor(container, _canvas, onChange) {
     const label = document.createElement('label');
     label.textContent = '목표 카운트: ';
 

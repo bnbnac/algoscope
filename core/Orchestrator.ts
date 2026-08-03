@@ -10,12 +10,14 @@ export type StepListener = (index: number, total: number, description: string) =
 export class Orchestrator<TInput, TState> {
   private readonly module: AlgorithmModule<TInput, TState>;
   private readonly renderer: Renderer<TState>;
+  private readonly canvas: HTMLCanvasElement;
   private player: StepPlayerImpl<TState>;
   private readonly listeners = new Set<StepListener>();
   private readonly resizeObserver: ResizeObserver | undefined;
 
   constructor(module: AlgorithmModule<TInput, TState>, canvas: HTMLCanvasElement, initialInput: TInput) {
     this.module = module;
+    this.canvas = canvas;
     this.renderer = module.createRenderer(canvas);
     this.player = this.buildPlayer(initialInput);
     this.dispatchCurrent();
@@ -23,7 +25,7 @@ export class Orchestrator<TInput, TState> {
   }
 
   mountInputEditor(container: HTMLElement): void {
-    this.module.createInputEditor?.(container, (input) => this.setInput(input));
+    this.module.createInputEditor?.(container, this.canvas, (input) => this.setInput(input));
   }
 
   subscribe(listener: StepListener): () => void {
