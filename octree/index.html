@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Octree — algo-viz</title>
+  </head>
+  <body>
+    <main style="max-width: 900px; margin: 2rem auto; font-family: system-ui, sans-serif; padding: 0 1rem;">
+      <h1>Octree</h1>
+      <p>
+        3D 점을 삽입하며 셀(cell)이 용량을 넘으면 8분할되는 과정과, occupancy(점유 여부)에 따른
+        셀 색상 변화를 시각화합니다. 마우스로 드래그하면 회전, 휠로 확대/축소할 수 있습니다.
+      </p>
+      <div style="max-width: 800px; width: 100%; aspect-ratio: 1 / 1">
+        <canvas
+          id="octree-canvas"
+          width="800"
+          height="800"
+          style="width: 100%; height: 100%; display: block; border: 1px solid #ccc"
+        ></canvas>
+      </div>
+      <div id="octree-input-editor" style="margin: 1rem 0"></div>
+      <div id="octree-shell"></div>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

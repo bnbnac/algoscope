@@ -19,6 +19,7 @@ mountShell(shellContainer, orchestrator, {
     { label: 'KD-tree', href: '../index.html' },
     { label: '2차원', href: '../2d/index.html' },
     { label: '3차원', href: './index.html' },
+    { label: 'Octree', href: '../../octree/index.html' },
   ],
   activeHref: './index.html',
 });

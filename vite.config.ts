@@ -15,6 +15,7 @@ export default defineConfig({
         kdtree: resolve(root, 'kdtree/index.html'),
         kdtree2d: resolve(root, 'kdtree/2d/index.html'),
         kdtree3d: resolve(root, 'kdtree/3d/index.html'),
+        octree: resolve(root, 'octree/index.html'),
       },
     },
   },

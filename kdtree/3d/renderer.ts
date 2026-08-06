@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { Renderer } from '../../core/AlgorithmModule';
 import type { Step } from '../../core/StepPlayer';
 import type { KdNode, KdTreeState, Vector } from '../shared/logic';
+import { createOrbitScene, disposeObject3D, type OrbitScene } from '../../three-shared/orbitScene';
 import { BOUNDS } from './bounds';
 
 const COLORS = {
@@ -15,101 +15,43 @@ const COLORS = {
   query: 0xcc00cc,
 };
 
-function disposeObject3D(object: THREE.Object3D): void {
-  object.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
-      child.geometry.dispose();
-      const material = child.material;
-      if (Array.isArray(material)) {
-        material.forEach((m) => m.dispose());
-      } else {
-        material.dispose();
-      }
-    }
-  });
-}
-
 export class KdTreeRenderer implements Renderer<KdTreeState> {
-  private readonly renderer: THREE.WebGLRenderer;
-  private readonly scene: THREE.Scene;
-  private readonly camera: THREE.PerspectiveCamera;
-  private readonly controls: OrbitControls;
-  private readonly group: THREE.Group;
-  private rafId: number;
+  private readonly orbit: OrbitScene;
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    this.renderer.setSize(canvas.width, canvas.height, false);
-
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xffffff);
-
-    const center = new THREE.Vector3(
-      (BOUNDS.min[0]! + BOUNDS.max[0]!) / 2,
-      (BOUNDS.min[1]! + BOUNDS.max[1]!) / 2,
-      (BOUNDS.min[2]! + BOUNDS.max[2]!) / 2
-    );
-    const span = Math.max(
-      BOUNDS.max[0]! - BOUNDS.min[0]!,
-      BOUNDS.max[1]! - BOUNDS.min[1]!,
-      BOUNDS.max[2]! - BOUNDS.min[2]!
-    );
-
-    this.camera = new THREE.PerspectiveCamera(50, canvas.width / Math.max(canvas.height, 1), 1, span * 10);
-    this.camera.position.set(center.x + span, center.y + span, center.z + span);
-
-    this.controls = new OrbitControls(this.camera, canvas);
-    this.controls.target.copy(center);
-    this.controls.enableDamping = true;
-    this.controls.update();
-
-    this.group = new THREE.Group();
-    this.scene.add(this.group);
-
-    const box = new THREE.Box3(
-      new THREE.Vector3(BOUNDS.min[0], BOUNDS.min[1], BOUNDS.min[2]),
-      new THREE.Vector3(BOUNDS.max[0], BOUNDS.max[1], BOUNDS.max[2])
-    );
-    this.scene.add(new THREE.Box3Helper(box, new THREE.Color(0xcccccc)));
-
-    const animate = (): void => {
-      this.rafId = requestAnimationFrame(animate);
-      this.controls.update();
-      this.renderer.render(this.scene, this.camera);
-    };
-    this.rafId = requestAnimationFrame(animate);
+    this.orbit = createOrbitScene(canvas, {
+      min: [BOUNDS.min[0]!, BOUNDS.min[1]!, BOUNDS.min[2]!],
+      max: [BOUNDS.max[0]!, BOUNDS.max[1]!, BOUNDS.max[2]!],
+    });
   }
 
   render(step: Step<KdTreeState>): void {
-    while (this.group.children.length > 0) {
-      disposeObject3D(this.group.children.pop()!);
+    const { group } = this.orbit;
+    while (group.children.length > 0) {
+      disposeObject3D(group.children.pop()!);
     }
 
     const { nodes, query } = step.state;
     const highlighted = new Set((step.highlight ?? []).map(String));
 
     for (const node of nodes) {
-      this.group.add(this.buildSplitPlane(node, highlighted, query));
-      this.group.add(this.buildPointMesh(node, highlighted, query));
+      group.add(this.buildSplitPlane(node, highlighted, query));
+      group.add(this.buildPointMesh(node, highlighted, query));
     }
     if (query) {
-      this.group.add(this.buildQueryMarker(query.point));
+      group.add(this.buildQueryMarker(query.point));
     }
   }
 
   resize(width: number, height: number): void {
-    this.camera.aspect = width / Math.max(height, 1);
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height, false);
+    this.orbit.resize(width, height);
   }
 
   dispose(): void {
-    cancelAnimationFrame(this.rafId);
-    this.controls.dispose();
-    while (this.group.children.length > 0) {
-      disposeObject3D(this.group.children.pop()!);
+    while (this.orbit.group.children.length > 0) {
+      disposeObject3D(this.orbit.group.children.pop()!);
     }
-    this.renderer.dispose();
+    this.orbit.dispose();
   }
 
   private buildSplitPlane(node: KdNode, highlighted: Set<string>, query: KdTreeState['query']): THREE.Object3D {
