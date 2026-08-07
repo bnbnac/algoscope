@@ -18,6 +18,7 @@ mountShell(shellContainer, orchestrator, {
     { label: '← 홈', href: '../index.html' },
     { label: 'KD-tree', href: '../kdtree/index.html' },
     { label: 'Octree', href: './index.html' },
+    { label: 'Union-Find', href: '../union-find/index.html' },
   ],
   activeHref: './index.html',
 });

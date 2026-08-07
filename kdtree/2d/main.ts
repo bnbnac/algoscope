@@ -20,6 +20,7 @@ mountShell(shellContainer, orchestrator, {
     { label: '2차원', href: './index.html' },
     { label: '3차원', href: '../3d/index.html' },
     { label: 'Octree', href: '../../octree/index.html' },
+    { label: 'Union-Find', href: '../../union-find/index.html' },
   ],
   activeHref: './index.html',
 });

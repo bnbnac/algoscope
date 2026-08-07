@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Union-Find — algo-viz</title>
+  </head>
+  <body>
+    <main style="max-width: 900px; margin: 2rem auto; font-family: system-ui, sans-serif; padding: 0 1rem;">
+      <h1>Union-Find</h1>
+      <p>
+        같은 union 호출 순서를 naive 버전(경로 압축·크기 비교 없음)과 optimized 버전(경로
+        압축 + union-by-size)에 동시에 적용해서 나란히 비교합니다. 한 union 호출 안에서 먼저
+        끝난 쪽은 다른 쪽이 따라올 때까지 기다렸다가 같이 다음 호출로 넘어갑니다 — optimized가
+        더 적은 스텝에 끝나는 것 자체가 최적화 효과입니다.
+      </p>
+      <div style="border: 1px solid #ddd; border-radius: 6px; padding: 0.75rem 1rem; margin: 1rem 0; background: #fafafa;">
+        <strong>관찰</strong>: "최적화가 항상 더 적은 스텝"이라고 무조건 믿으면 안 됩니다.
+        예를 들어 <code>e0-e1, e1-e2, e2-e3, ...</code>처럼 <em>연속된 원소를 순서대로</em>
+        union하면, naive의 union 규칙(첫 인자의 루트를 두 번째 인자 밑에 붙임) 때문에 매
+        연산의 첫 인자가 항상 직전 연산에서 막 루트가 된 노드라서 — 체인이 눈으로 보기엔
+        길어 보여도 <em>실제로 다시 탐색되는 일이 없습니다</em>. naive가 진짜로 손해를 보는
+        패턴은 <code>e0-e1, e0-e2, e0-e3, ...</code>처럼 <em>같은 원소를 계속 재참조</em>할
+        때입니다 — 이땐 루트를 찾아가는 경로가 연산마다 한 홉씩 길어집니다. 직접 두 패턴을
+        입력해서 스텝 수 차이를 비교해보세요. 어떤 입력이 "나쁜 케이스"인지는 알고리즘의
+        규칙(여기선 "어느 인자를 어디에 붙이는가")과 맞물려서 결정되지, 겉모습(체인이냐
+        아니냐)만으로는 알 수 없다는 게 핵심입니다.
+      </div>
+      <div style="max-width: 800px; width: 100%; aspect-ratio: 8 / 5">
+        <canvas
+          id="union-find-canvas"
+          width="800"
+          height="500"
+          style="width: 100%; height: 100%; display: block; border: 1px solid #ccc"
+        ></canvas>
+      </div>
+      <div id="union-find-input-editor" style="margin: 1rem 0"></div>
+      <div id="union-find-shell"></div>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
